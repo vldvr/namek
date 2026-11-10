@@ -1,0 +1,15 @@
+node_modules/
+out/
+dist/
+release/
+.DS_Store
+*.log
+.vite/
+test-results/
+playwright-report/
+.namek-profiles/
+tools/.cache/
+server/namek.db*
+server/rooms.json*
+server/data/
+promo/reel/out/

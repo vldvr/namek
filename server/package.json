@@ -1,0 +1,11 @@
+{
+  "name": "namek-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Сервер комнат «Намёка»: партии, общий словарь, API модерации",
+  "dependencies": {
+    "ws": "8.22.0",
+    "zod": "4.6.7"
+  }
+}

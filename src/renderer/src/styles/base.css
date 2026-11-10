@@ -1,0 +1,145 @@
+@font-face {
+  font-family: 'Geologica';
+  src: url('../assets/fonts/Geologica.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: oblique 0deg 12deg;
+  font-display: block;
+}
+
+:root {
+  /* Ночь и чернила: холодная база, тёплые карточки слов */
+  --room: #11141f;
+  --room-2: #171b29;
+  --room-3: #1f2434;
+  --room-4: #2a3044;
+
+  /* Хром интерфейса: «кость» — основные кнопки и выделения */
+  --lamp: #e9e5dc;
+  --lamp-ink: #11141f;
+  --lamp-12: rgb(233 229 220 / 0.08);
+  --lamp-24: rgb(233 229 220 / 0.16);
+  --lamp-40: rgb(233 229 220 / 0.32);
+
+  /* Команды */
+  --amber: #f0a53a;
+  --amber-deep: #a3620f;
+  --amber-ink: #2b1703;
+  --teal: #2fb7a6;
+  --teal-deep: #0f7166;
+  --teal-ink: #04201c;
+  --neutral: #8b8a84;
+  --neutral-tile: #cbc6ba;
+  --trap: #0b0c12;
+
+  /* Карточки слов */
+  --tile: #ebe7de;
+  --tile-2: #ddd8cc;
+  --tile-ink: #1a1c25;
+
+  /* Текст */
+  --text: #ece9e2;
+  --muted: #9da1b0;
+  --faint: #646a7d;
+  --line: rgb(236 233 226 / 0.09);
+  --line-2: rgb(236 233 226 / 0.17);
+  --error: #ef8a76;
+
+  --radius-s: 8px;
+  --radius-m: 14px;
+  --radius-pill: 999px;
+
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --z-stage: 1;
+  --z-hud: 20;
+  --z-panel: 30;
+  --z-modal: 50;
+  --z-toast: 60;
+  --z-grain: 70;
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--room);
+  color: var(--text);
+  font-family: 'Geologica', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  font-variation-settings: 'SHRP' 0;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  user-select: none;
+  cursor: default;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+input,
+textarea {
+  user-select: text;
+}
+
+:focus-visible {
+  outline: 2px solid var(--lamp);
+  outline-offset: 2px;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+  font-variation-settings: 'SHRP' 40;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Зерно поверх всего: фиксированный слой, не перерисовывается при скролле. */
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: var(--z-grain);
+  background-image: url('../assets/noise.png');
+  background-size: 256px;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,972 @@
+/* ——— команды: один источник цвета для всего, что внутри .team-* ——— */
+.team-amber {
+  --team: var(--amber);
+  --team-deep: var(--amber-deep);
+  --team-ink: var(--amber-ink);
+}
+
+.team-teal {
+  --team: var(--teal);
+  --team-deep: var(--teal-deep);
+  --team-ink: var(--teal-ink);
+}
+
+.t-amber {
+  color: var(--amber);
+}
+
+.t-teal {
+  color: var(--teal);
+}
+
+/* ——— каркас ——— */
+.room {
+  --turn: transparent;
+  position: relative;
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  background: var(--room);
+  overflow: hidden;
+}
+
+/* Цвет хода заливает край окна: видно краем глаза, чей сейчас ход. */
+.room::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 4px var(--turn);
+  transition: box-shadow 500ms var(--ease);
+  z-index: var(--z-hud);
+}
+
+.room[data-turn='amber'] {
+  --turn: var(--amber);
+}
+
+.room[data-turn='teal'] {
+  --turn: var(--teal);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 52px;
+  padding: 0 16px 0 20px;
+  -webkit-app-region: drag;
+}
+
+.room.is-mac .topbar {
+  padding-left: 88px;
+}
+
+.topbar button {
+  -webkit-app-region: no-drag;
+}
+
+.topbar__left,
+.topbar__right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* На Windows справа кнопки окна. */
+.room:not(.is-mac) .topbar__right {
+  margin-right: 130px;
+}
+
+.topbar__code {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+  background: none;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.topbar__code .num {
+  color: var(--text);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.topbar__code:hover {
+  border-color: var(--line-2);
+}
+
+.topbar__score {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.topbar__colon {
+  margin: 0 4px;
+  color: var(--faint);
+}
+
+.topbar__conn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--error);
+  font-size: 13px;
+}
+
+.topbar__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.topbar__btn:hover {
+  color: var(--text);
+}
+
+/* ——— лобби ——— */
+.lobby {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) minmax(360px, 1.15fr) minmax(240px, 1fr);
+  gap: 20px;
+  padding: 12px 24px 24px;
+  min-height: 0;
+  overflow: auto;
+}
+
+.lobby__team:first-child {
+  order: 0;
+}
+
+.lobby__middle {
+  order: 1;
+}
+
+.lobby__team:nth-child(2) {
+  order: 2;
+}
+
+.lobby__team {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: 20px;
+  border-radius: var(--radius-m);
+  background: linear-gradient(180deg, color-mix(in oklab, var(--team) 14%, var(--room-2)), var(--room-2) 70%);
+  border: 1px solid color-mix(in oklab, var(--team) 30%, transparent);
+}
+
+.lobby__team-name {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--team);
+}
+
+.lobby__slot,
+.lobby__spectators {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border-radius: var(--radius-s);
+  background: rgb(0 0 0 / 0.18);
+  border: 1px dashed transparent;
+  transition: border-color 140ms var(--ease);
+}
+
+.is-dropping .lobby__slot,
+.lobby__middle:has(~ .is-dropping) .lobby__spectators {
+  border-color: var(--line-2);
+}
+
+.lobby__slot--captain {
+  min-height: 116px;
+}
+
+.lobby__slot-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.lobby__slot--captain .lobby__slot-label svg {
+  color: var(--team);
+}
+
+.lobby__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.lobby__empty {
+  color: var(--faint);
+  font-size: 14px;
+}
+
+.lobby__sit {
+  justify-self: start;
+}
+
+.lobby__middle {
+  display: grid;
+  align-content: start;
+  gap: 18px;
+}
+
+.lobby__start {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 26px 20px 20px;
+  text-align: center;
+}
+
+.lobby__start .btn--primary {
+  min-width: 260px;
+}
+
+.lobby__wait {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.lobby__hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.lobby__settings {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border-radius: var(--radius-m);
+  background: var(--room-2);
+  border: 1px solid var(--line);
+}
+
+.lobby__count {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.srow {
+  display: grid;
+  gap: 6px;
+}
+
+.srow__label {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.srow__value {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pchip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px 4px 4px;
+  border-radius: var(--radius-pill);
+  background: var(--room-3);
+  border: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.pchip[draggable='true'] {
+  cursor: grab;
+}
+
+.pchip--big {
+  padding: 5px 12px 5px 5px;
+  font-size: 16px;
+  font-weight: 600;
+  justify-self: start;
+}
+
+.pchip.is-me {
+  border-color: var(--line-2);
+}
+
+.pchip.is-offline {
+  opacity: 0.55;
+}
+
+.pchip__tag {
+  color: var(--faint);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.pchip__kick {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  margin-right: -4px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--faint);
+  opacity: 0;
+  transition: opacity 120ms var(--ease);
+}
+
+.pchip:hover .pchip__kick,
+.pchip__kick:focus-visible {
+  opacity: 1;
+}
+
+.pchip__kick:hover {
+  color: var(--error);
+}
+
+.modal__lede {
+  margin: 0 0 4px;
+  color: var(--muted);
+}
+
+.words-area {
+  min-height: 220px;
+  resize: vertical;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.words-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.words-foot .is-short {
+  color: var(--faint);
+}
+
+.words-foot__actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ——— поле ——— */
+.board-screen {
+  display: grid;
+  grid-template-columns: minmax(200px, 250px) minmax(0, 1fr) minmax(200px, 250px);
+  gap: 18px;
+  padding: 4px 20px 18px;
+  min-height: 0;
+}
+
+.board-center {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 14px;
+  min-height: 0;
+  min-width: 0;
+}
+
+/* строка состояния */
+.status {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-height: 74px;
+  padding: 12px 20px;
+  border-radius: var(--radius-m);
+  background: color-mix(in oklab, var(--team) 13%, var(--room-2));
+  border: 1px solid color-mix(in oklab, var(--team) 38%, transparent);
+  transition:
+    background-color 400ms var(--ease),
+    border-color 400ms var(--ease);
+}
+
+.status__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.status__main {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 750;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--team);
+}
+
+.status__sub {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.status__clue {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 6px 18px;
+  border-radius: var(--radius-s);
+  background: var(--tile);
+  color: var(--tile-ink);
+  box-shadow: 0 6px 0 var(--team-deep);
+}
+
+.status__clue-word {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.status__clue-count {
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--team-deep);
+}
+
+.countdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.countdown.is-low {
+  color: var(--error);
+}
+
+/* сетка */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-rows: repeat(5, minmax(0, 1fr));
+  gap: clamp(6px, 0.9vw, 12px);
+  min-height: 0;
+  perspective: 900px;
+}
+
+.tile {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  padding: 6px 10px;
+  border-radius: var(--radius-s);
+  background: var(--tile);
+  color: var(--tile-ink);
+  box-shadow:
+    inset 0 -4px 0 var(--tile-2),
+    0 2px 0 rgb(0 0 0 / 0.25);
+  transition:
+    transform 140ms var(--ease),
+    box-shadow 140ms var(--ease),
+    background-color 300ms var(--ease);
+  overflow: hidden;
+}
+
+.tile__word {
+  max-width: 100%;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  line-height: 1.1;
+}
+
+.tile.is-clickable {
+  cursor: pointer;
+}
+
+.tile.is-clickable:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 -4px 0 var(--tile-2),
+    0 6px 14px rgb(0 0 0 / 0.35);
+}
+
+.tile.is-clickable:active {
+  transform: translateY(1px);
+}
+
+/* метка «я за это слово»: обводка не зависит от тени и наведения */
+.tile.is-marked {
+  outline: 3px solid color-mix(in oklab, var(--turn) 50%, transparent);
+  outline-offset: -3px;
+}
+
+.tile.is-mine {
+  outline: 4px solid var(--turn);
+  outline-offset: -4px;
+}
+
+.tile__marks {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  display: flex;
+}
+
+.tile__marks .avatar + .avatar {
+  margin-left: -6px;
+}
+
+.tile__marks .avatar {
+  box-shadow: 0 0 0 2px var(--tile);
+}
+
+.tile__open {
+  position: absolute;
+  right: 6px;
+  bottom: 8px;
+  padding: 4px 12px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--tile-ink);
+  color: var(--tile);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.tile__open:hover {
+  background: #000;
+}
+
+.tile__glyph {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  opacity: 0.85;
+}
+
+/* ключ у капитана: полоса цвета снизу + тонировка, слово читается */
+.tile.is-key.tile--amber {
+  background: color-mix(in oklab, var(--amber) 34%, var(--tile));
+  box-shadow: inset 0 -6px 0 var(--amber);
+}
+
+.tile.is-key.tile--teal {
+  background: color-mix(in oklab, var(--teal) 34%, var(--tile));
+  box-shadow: inset 0 -6px 0 var(--teal);
+}
+
+.tile.is-key.tile--neutral {
+  background: var(--tile);
+}
+
+.tile.is-key.tile--trap {
+  background: var(--trap);
+  color: var(--tile);
+  box-shadow: inset 0 0 0 2px var(--error);
+}
+
+.tile.is-key .tile__glyph {
+  opacity: 0.7;
+}
+
+/* открытые слова: заливка цветом, слово остаётся читаемым, но уходит на второй план */
+.tile.is-revealed {
+  box-shadow: none;
+}
+
+.tile.is-revealed.tile--amber {
+  background: var(--amber);
+  color: var(--amber-ink);
+}
+
+.tile.is-revealed.tile--teal {
+  background: var(--teal);
+  color: var(--teal-ink);
+}
+
+.tile.is-revealed.tile--neutral {
+  background: var(--neutral-tile);
+  color: #45443f;
+}
+
+.tile.is-revealed.tile--trap {
+  background: var(--trap);
+  color: var(--error);
+}
+
+.tile.is-revealed .tile__word {
+  opacity: 0.62;
+}
+
+/* у капитана открытое слово тускнее закрытых: внимание на то, что осталось */
+.is-captain .tile.is-revealed {
+  opacity: 0.45;
+}
+
+/* после партии: неоткрытые слова показаны полупрозрачным ключом */
+.tile.is-unrevealed.tile--amber {
+  background: color-mix(in oklab, var(--amber) 40%, var(--room-3));
+  color: var(--text);
+}
+
+.tile.is-unrevealed.tile--teal {
+  background: color-mix(in oklab, var(--teal) 40%, var(--room-3));
+  color: var(--text);
+}
+
+.tile.is-unrevealed.tile--neutral {
+  background: var(--room-3);
+  color: var(--muted);
+}
+
+.tile.is-unrevealed.tile--trap {
+  background: var(--trap);
+  color: var(--error);
+}
+
+.tile.is-unrevealed {
+  box-shadow: none;
+}
+
+/* узоры для тех, кто плохо различает цвета */
+.has-patterns .tile--amber::after,
+.has-patterns .tile--teal::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.22;
+}
+
+.has-patterns .tile--amber::after {
+  background: repeating-linear-gradient(135deg, currentColor 0 2px, transparent 2px 10px);
+}
+
+.has-patterns .tile--teal::after {
+  background: radial-gradient(currentColor 1.5px, transparent 1.6px) 0 0 / 10px 10px;
+}
+
+/* панель действий */
+.actionbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 64px;
+}
+
+.clue-form {
+  justify-content: space-between;
+  padding: 8px 8px 8px 12px;
+  border-radius: var(--radius-m);
+  background: var(--room-2);
+  border: 1px solid var(--line-2);
+}
+
+.clue-form__field {
+  position: relative;
+  flex: 1;
+  min-width: 160px;
+}
+
+.clue-form__input {
+  width: 100%;
+  height: 48px;
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.clue-form__input::placeholder {
+  text-transform: none;
+  font-weight: 400;
+}
+
+.clue-form__problem {
+  position: absolute;
+  left: 2px;
+  top: calc(100% + 4px);
+  color: var(--error);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.clue-form__counts {
+  display: flex;
+  gap: 4px;
+}
+
+.clue-form__counts button {
+  width: 36px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-s);
+  background: var(--room-3);
+  font-size: 17px;
+  font-weight: 600;
+  transition:
+    background-color 120ms var(--ease),
+    color 120ms var(--ease);
+}
+
+.clue-form__counts button:hover {
+  border-color: var(--line-2);
+}
+
+.clue-form__counts button[aria-checked='true'] {
+  background: var(--lamp);
+  color: var(--lamp-ink);
+  border-color: var(--lamp);
+}
+
+/* боковые панели команд */
+.rail {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 12px;
+  min-height: 0;
+  padding: 16px;
+  border-radius: var(--radius-m);
+  background: var(--room-2);
+  border: 1px solid var(--line);
+  transition: border-color 400ms var(--ease);
+}
+
+.rail.is-active {
+  border-color: color-mix(in oklab, var(--team) 60%, transparent);
+}
+
+.rail__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.rail__name {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--team);
+}
+
+.rail__left {
+  font-size: 44px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--team);
+}
+
+.rail__people {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0 0 12px;
+  list-style: none;
+  border-bottom: 1px solid var(--line);
+}
+
+.rail__people li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  min-width: 0;
+}
+
+.rail__people li span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rail__people li.is-offline {
+  color: var(--faint);
+}
+
+.rail__crown {
+  flex: none;
+  color: var(--team);
+}
+
+.rail__clues {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  overflow: auto;
+  min-height: 0;
+}
+
+.rail__empty {
+  margin: 0;
+  color: var(--faint);
+  font-size: 13px;
+}
+
+.clue-row {
+  display: grid;
+  gap: 6px;
+}
+
+.clue-row__head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.clue-row__word {
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.clue-row__count {
+  color: var(--muted);
+}
+
+.clue-row__guesses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.gchip {
+  padding: 1px 7px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.gchip.tile--amber {
+  background: var(--amber);
+  color: var(--amber-ink);
+}
+
+.gchip.tile--teal {
+  background: var(--teal);
+  color: var(--teal-ink);
+}
+
+.gchip.tile--neutral {
+  background: var(--neutral-tile);
+  color: #45443f;
+}
+
+.gchip.tile--trap {
+  background: var(--trap);
+  color: var(--error);
+  box-shadow: inset 0 0 0 1px var(--error);
+}
+
+/* ——— конец партии ——— */
+.over {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-panel);
+  display: grid;
+  place-items: center;
+  background: rgb(10 12 18 / 0.55);
+  backdrop-filter: blur(2px);
+}
+
+.over__card {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  width: min(480px, 90vw);
+  padding: 34px 32px 26px;
+  border-radius: 18px;
+  background: var(--room-2);
+  border: 1px solid color-mix(in oklab, var(--team) 50%, transparent);
+  box-shadow: 0 30px 80px rgb(0 0 0 / 0.45);
+  text-align: center;
+}
+
+.over__kicker {
+  margin: 0;
+  color: var(--muted);
+}
+
+.over__title {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--team);
+}
+
+.over__reason {
+  margin: 0;
+  color: var(--muted);
+}
+
+.over__score {
+  margin: 6px 0 10px;
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.over__actions {
+  display: flex;
+  gap: 10px;
+}
+
+.over__wait {
+  margin: 0;
+  color: var(--muted);
+}
+
+.over__links {
+  display: flex;
+  gap: 20px;
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.over__links .link-btn {
+  color: var(--muted);
+}
+
+.over-chip {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  z-index: var(--z-panel);
+  transform: translateX(-50%);
+  padding: 10px 18px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--team);
+  color: var(--team-ink);
+  font-weight: 700;
+}
+
+@media (max-width: 1180px) {
+  .board-screen {
+    grid-template-columns: 190px minmax(0, 1fr) 190px;
+    gap: 12px;
+  }
+  .clue-form__counts button {
+    width: 30px;
+  }
+}

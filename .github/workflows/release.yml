@@ -1,0 +1,105 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Тег, который пересобрать (например v1.1.0)'
+        required: true
+      source_ref:
+        description: 'Коммит или ветка, из которой собирать (по умолчанию main)'
+        required: false
+        default: main
+
+permissions:
+  contents: write
+
+jobs:
+  # Черновик заводим один раз до сборок: параллельные загрузки иначе плодят дубли релиза.
+  draft:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TAG: ${{ inputs.tag || github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref || inputs.tag || github.ref }}
+      - name: Проверить соответствие версии тегу
+        run: |
+          PKG_VERSION="$(node -p "require('./package.json').version")"
+          TAG_VERSION="${TAG#v}"
+          test "$PKG_VERSION" = "$TAG_VERSION" || {
+            echo "package.json version ($PKG_VERSION) does not match tag ($TAG)"
+            exit 1
+          }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      # Патчноут обязателен: без записи в src/renderer/src/changelog.ts скрипт падает и релиз не выходит.
+      - name: Патчноут
+        run: node --experimental-strip-types tools/release-notes.mjs "$TAG" > "$RUNNER_TEMP/notes.md"
+      - name: Черновик релиза
+        run: gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --draft --title "Намёк $TAG" --notes-file "$RUNNER_TEMP/notes.md"
+
+  windows:
+    needs: draft
+    runs-on: windows-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TAG: ${{ inputs.tag || github.ref_name }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref || inputs.tag || github.ref }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - name: Собрать установщик и portable
+        run: |
+          rm -rf release
+          npx electron-builder --win --x64 --publish never
+      - name: Загрузить артефакты в релиз
+        run: gh release upload "$TAG" release/*.exe release/*.blockmap release/latest.yml --clobber
+
+  mac:
+    needs: draft
+    runs-on: macos-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TAG: ${{ inputs.tag || github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref || inputs.tag || github.ref }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Собрать dmg и zip
+        run: |
+          rm -rf release
+          npx electron-builder --mac --publish never
+      - name: Загрузить артефакты в релиз
+        run: gh release upload "$TAG" release/*.dmg release/*-mac-*.zip --clobber
+
+  publish:
+    needs: [windows, mac]
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TAG: ${{ inputs.tag || github.ref_name }}
+    steps:
+      - name: Опубликовать релиз
+        run: gh release edit "$TAG" -R "$GITHUB_REPOSITORY" --draft=false --latest

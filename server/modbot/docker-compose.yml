@@ -1,0 +1,18 @@
+services:
+  modbot:
+    build: .
+    container_name: namek-modbot
+    restart: unless-stopped
+    # host-сеть нужна, чтобы достать обратный туннель rtunnel на 127.0.0.1:22443 (→ russia:443)
+    network_mode: host
+    environment:
+      # TELEGRAM_BOT_TOKEN, ADMIN_CHAT_ID и MOD_KEY лежат в /root/namek-modbot/.env
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:?}
+      ADMIN_CHAT_ID: ${ADMIN_CHAT_ID:?}
+      MOD_KEY: ${MOD_KEY:?}
+      NAMEK_VIA: 127.0.0.1:22443
+    mem_limit: 64m
+    logging:
+      options:
+        max-size: '2m'
+        max-file: '2'

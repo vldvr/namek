@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  @font-face { font-family: 'Geologica'; src: url('../src/renderer/src/assets/fonts/Geologica.woff2') format('woff2'); font-weight: 100 900; }
+  html, body { margin: 0; width: 1024px; height: 1024px; background: transparent; overflow: hidden; }
+  /* Иконка Намёка: чернильная плитка, в ней карточка слова цвета кости с полосами двух команд. */
+  .icon { position: absolute; inset: 40px; border-radius: 230px; overflow: hidden; background: #11141f;
+    box-shadow: inset 0 0 0 4px rgba(236,233,226,.08); }
+  .card { position: absolute; left: 150px; right: 150px; top: 200px; bottom: 200px; border-radius: 70px;
+    background: #ebe7de; box-shadow: inset 0 -44px 0 #f0a53a, 0 30px 60px rgba(0,0,0,.45);
+    display: grid; place-items: center; }
+  .card::after { content: ''; position: absolute; right: 70px; top: 70px; width: 90px; height: 90px; border-radius: 50%; background: #2fb7a6; }
+  .letter { font-family: 'Geologica'; font-weight: 800; font-size: 440px; line-height: 1; color: #1a1c25;
+    font-variation-settings: 'SHRP' 100; padding-bottom: 40px; letter-spacing: -0.04em; }
+</style>
+</head>
+<body><div class="icon"><div class="card"><div class="letter">Н</div></div></div></body>
+</html>

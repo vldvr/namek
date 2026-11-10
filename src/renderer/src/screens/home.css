@@ -1,0 +1,310 @@
+.home {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(380px, 1fr) minmax(0, 1.1fr);
+  background:
+    radial-gradient(70% 90% at 85% 40%, rgb(47 183 166 / 0.07), transparent 65%),
+    radial-gradient(50% 60% at 70% 90%, rgb(240 165 58 / 0.06), transparent 70%),
+    var(--room);
+}
+
+.home__drag {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 40px;
+  -webkit-app-region: drag;
+  z-index: 2;
+}
+
+.home__main {
+  position: relative;
+  z-index: 3;
+  grid-column: 1;
+  grid-row: 1;
+  display: grid;
+  align-content: center;
+  gap: 22px;
+  width: min(460px, 100%);
+  margin-left: clamp(40px, 7vw, 120px);
+  padding: 60px 0 90px;
+}
+
+.home__title {
+  margin: 0 0 -8px;
+  font-size: clamp(76px, 8.5vw, 124px);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.05em;
+  font-variation-settings: 'SHRP' 100;
+}
+
+.home__lede {
+  margin: 0;
+  max-width: 32ch;
+  font-size: 18px;
+  color: var(--muted);
+}
+
+.home__me {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 5px 16px 5px 5px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+  background: var(--lamp-12);
+  transition: border-color 160ms var(--ease);
+}
+
+.home__me:hover {
+  border-color: var(--line-2);
+}
+
+.home__me-name {
+  font-weight: 500;
+}
+
+.home__me-edit {
+  color: var(--faint);
+}
+
+.home__actions {
+  display: grid;
+  gap: 22px;
+  margin-top: 8px;
+}
+
+.home__actions > .btn--primary {
+  justify-self: start;
+  min-width: 240px;
+}
+
+.home__join {
+  display: grid;
+  gap: 10px;
+}
+
+.home__join-label {
+  color: var(--faint);
+  font-size: 14px;
+}
+
+.home__join-row {
+  display: flex;
+  gap: 10px;
+}
+
+.home__recent {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.home__recent:hover {
+  color: var(--text);
+}
+
+.home__status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--lamp);
+  animation: pulse 1.2s var(--ease-in-out) infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.link-btn {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.home__foot {
+  position: absolute;
+  left: clamp(40px, 7vw, 120px);
+  bottom: 28px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  font-size: 13px;
+}
+
+.home__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--faint);
+}
+
+.home__link:hover {
+  color: var(--text);
+}
+
+.home__update {
+  color: var(--muted);
+}
+
+.home__settings {
+  position: absolute;
+  top: 44px;
+  right: 24px;
+  z-index: 3;
+}
+
+.home.is-mac .home__settings {
+  top: 44px;
+}
+
+/* Код комнаты: шесть ячеек поверх одного поля */
+.code {
+  position: relative;
+  display: flex;
+  gap: 6px;
+  cursor: text;
+}
+
+.code__input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  border: 0;
+  caret-color: transparent;
+}
+
+.code__cell {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 52px;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--line-2);
+  background: var(--room-2);
+  font-size: 22px;
+  font-weight: 600;
+  transition: border-color 140ms var(--ease);
+}
+
+.code__cell.is-gap {
+  margin-left: 10px;
+}
+
+.code__cell.is-active {
+  border-color: var(--lamp);
+}
+
+/* Поле справа */
+.home__art {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  justify-self: start;
+  display: grid;
+  gap: 18px;
+  padding-right: 40px;
+  transform: rotate(-4deg) translateX(20px);
+  pointer-events: none;
+}
+
+.home__clue {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  color: var(--teal);
+}
+
+.home__clue-word {
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.home__clue-count {
+  font-size: 40px;
+  font-weight: 300;
+}
+
+.home__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 150px);
+  gap: 10px;
+}
+
+.tile--hero {
+  height: 96px;
+}
+
+@media (max-width: 1180px) {
+  .home__grid {
+    grid-template-columns: repeat(4, 118px);
+  }
+  .tile--hero {
+    height: 80px;
+  }
+}
+
+.propose__row {
+  display: flex;
+  gap: 8px;
+}
+
+.propose__input {
+  flex: 1;
+}
+
+.propose__results {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+}
+
+.propose__results li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+}
+
+.propose__results b {
+  color: var(--text);
+}
+
+.propose__results .is-ok svg {
+  color: var(--teal);
+}
+
+.propose__results .is-bad svg {
+  color: var(--error);
+}

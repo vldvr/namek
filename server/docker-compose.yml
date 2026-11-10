@@ -1,0 +1,24 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    container_name: namek-server
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:8096:8080'
+    environment:
+      # Порт открыт только на localhost, снаружи ходят через nginx: ему можно верить в X-Real-IP.
+      TRUST_PROXY: '1'
+      # Ключ для бота модерации (на nether). Лежит в /root/namek-server/.env: MOD_KEY=...
+      MOD_KEY: ${MOD_KEY:-}
+    volumes:
+      # Словарь и снимок комнат. Бэкап: /root/namek-server/data/namek.db
+      - ./data:/app/data
+    # Снимок комнат пишется при остановке: даём на это время.
+    stop_grace_period: 15s
+    mem_limit: 160m
+    logging:
+      options:
+        max-size: '5m'
+        max-file: '2'
