@@ -153,6 +153,16 @@ describe('комната', () => {
     expect(host.lastError).toMatchObject({ code: 'captain_locked' })
   })
 
+  it('капитан, вышедший посреди партии, не возвращается отгадчиком', () => {
+    const { room, host, tk } = started()
+    host.send({ t: 'leave' })
+    const back = new Client(room, tk('host'))
+    back.send({ t: 'seat', team: 'amber', captain: false })
+    expect(back.lastError).toMatchObject({ code: 'captain_locked' })
+    back.send({ t: 'seat', team: 'teal', captain: false })
+    expect(back.lastError).toMatchObject({ code: 'captain_locked' })
+  })
+
   it('переподключение по токену сохраняет место', () => {
     const { room, a2, tk } = started()
     a2.session.detach()

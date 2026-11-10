@@ -136,7 +136,7 @@ function PlayerChip({ p, you, host, big, draggable, onDrag, kick }: { p: PlayerV
       {p.id === you && <span className="pchip__tag">ты</span>}
       {p.id === host && <span className="pchip__tag">хост</span>}
       {kick && (
-        <button className="pchip__kick" aria-label={`Убрать ${p.name} из комнаты`} title="Убрать из комнаты" onClick={() => confirm(`Убрать ${p.name} из комнаты? Вернуться по этому коду он не сможет.`) && kick()}>
+        <button className="pchip__kick" aria-label={`Убрать ${p.name} из комнаты`} title="Убрать из комнаты" onClick={() => confirm(`Убрать ${p.name} из комнаты? С этого профиля по коду он больше не войдёт. Если не хотите видеть его совсем, создайте новую комнату.`) && kick()}>
           <UserMinus size={14} />
         </button>
       )}

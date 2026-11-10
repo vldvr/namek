@@ -76,6 +76,7 @@ export interface RoomSnapshot {
   game: GameState | null
   score: Record<Team, number>
   marks: Record<number, string[]>
+  keySeen?: string[]
 }
 
 export class Room {
@@ -90,6 +91,8 @@ export class Room {
   private game: GameState | null = null
   private score: Record<Team, number> = { amber: 0, teal: 0 }
   private marks = new Map<number, Set<string>>()
+  /** Токены тех, кто в этой партии видел ключ: отгадчиками до конца партии им нельзя. */
+  private keySeen = new Set<string>()
   private deadline: number | null = null
   private phaseTimer: unknown = null
   private hostTimer: unknown = null
@@ -312,6 +315,7 @@ export class Room {
           if (!isHost) return fail('not_host')
           this.stage = 'lobby'
           this.game = null
+          this.keySeen.clear()
           this.marks.clear()
           this.clearPhase()
           return this.broadcast()
@@ -390,7 +394,7 @@ export class Room {
   private seat(m: Member, team: Team | null, captain: boolean, byHost: boolean): string | null {
     if (team === null) captain = false
     if (this.stage === 'play') {
-      if (m.captain && !(team === m.team && captain)) return 'captain_locked' // капитан видел ключ
+      if ((m.captain || this.keySeen.has(m.token)) && !(team === m.team && captain)) return 'captain_locked' // видел ключ
       if (m.team && team !== m.team && !byHost) return 'in_game'
       if (captain && team && this.captainOf(team) && this.captainOf(team) !== m) return 'captain_taken'
     } else if (captain && team) {
@@ -399,6 +403,7 @@ export class Room {
     }
     m.team = team
     m.captain = captain
+    if (this.stage === 'play' && captain) this.keySeen.add(m.token)
     return null
   }
 
@@ -457,6 +462,7 @@ export class Room {
   private start() {
     this.game = newGame(this.pool(), this.rnd)
     this.stage = 'play'
+    this.keySeen = new Set([...this.members.values()].filter((m) => m.captain).map((m) => m.token))
     this.marks.clear()
     this.armPhase()
     this.broadcast([{ e: 'start' }])
@@ -566,6 +572,7 @@ export class Room {
       game: this.game,
       score: this.score,
       marks,
+      keySeen: [...this.keySeen],
     }
   }
 
@@ -580,6 +587,7 @@ export class Room {
     this.game = s.game
     this.score = s.score
     for (const [i, ids] of Object.entries(s.marks)) this.marks.set(Number(i), new Set(ids))
+    this.keySeen = new Set(s.keySeen ?? [])
     // таймер фазы после перезапуска начинаем заново — честнее, чем терять ход из-за выката
     this.armPhase()
   }
