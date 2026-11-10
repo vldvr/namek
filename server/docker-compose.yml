@@ -10,7 +10,7 @@ services:
     environment:
       # Порт открыт только на localhost, снаружи ходят через nginx: ему можно верить в X-Real-IP.
       TRUST_PROXY: '1'
-      # Ключ для бота модерации (на nether). Лежит в /root/namek-server/.env: MOD_KEY=...
+      # Ключ для бота модерации. Лежит в /root/namek-server/.env: MOD_KEY=...
       MOD_KEY: ${MOD_KEY:-}
     volumes:
       # Словарь и снимок комнат. Бэкап: /root/namek-server/data/namek.db

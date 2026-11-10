@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Выкатывает сервер «Намёка» на russia: server/deploy.sh [ssh-хост]
+# Выкатывает сервер «Намёка»: server/deploy.sh <ssh-хост>
 # Первый запуск ещё и заводит vhost namek.wkiseven.me, сертификат и ключ модерации.
 set -euo pipefail
-HOST=${1:-russia}
+HOST=${1:?укажи ssh-хост}
 DOMAIN=namek.wkiseven.me
 cd "$(dirname "$0")/.."
 
@@ -14,7 +14,7 @@ scp -q server/docker-compose.yml "$HOST":/root/namek-server/docker-compose.yml
 ssh "$HOST" DOMAIN="$DOMAIN" bash -s <<'REMOTE'
 set -euo pipefail
 cd /root/namek-server
-# Ключ модерации создаётся один раз; его же кладём боту на nether.
+# Ключ модерации создаётся один раз; его же кладём боту модерации.
 [ -f .env ] || echo "MOD_KEY=$(openssl rand -hex 24)" > .env
 mkdir -p data && chown 1000:1000 data
 docker compose up -d --build

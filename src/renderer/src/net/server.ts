@@ -1,6 +1,6 @@
 import type { ClientMessage, ClientTransport, ServerMessage } from '../../../protocol/index.ts'
 
-/** Сервер на russia. Для разработки: ?server=http://127.0.0.1:8787 или localStorage namek.server. */
+/** Боевой сервер. Для разработки: ?server=http://127.0.0.1:8787 или localStorage namek.server. */
 export const SERVER_URL = (() => {
   if (typeof location !== 'undefined') {
     const q = new URLSearchParams(location.search).get('server')

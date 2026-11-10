@@ -36,8 +36,8 @@ src/protocol    сообщения клиент ↔ сервер и то, что
 src/client      сессия клиента
 src/renderer    интерфейс (React)
 src/main        оболочка Electron, автообновление
-server/         комнаты, словарь (SQLite), HTTP/WS; выкат server/deploy.sh на russia
-server/modbot/  бот модерации слов в Телеграме; выкат server/modbot/deploy.sh на nether
+server/         комнаты, словарь (SQLite), HTTP/WS; выкат server/deploy.sh <ssh-хост>
+server/modbot/  бот модерации слов в Телеграме; выкат server/modbot/deploy.sh <ssh-хост>
 ```
 
 Звуки: Kenney (CC0). Шрифт: Geologica (OFL). Иконки: Phosphor (MIT).
