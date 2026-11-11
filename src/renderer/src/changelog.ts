@@ -22,6 +22,18 @@ export interface Release {
 
 export const CHANGELOG: Release[] = [
   {
+    version: '0.1.1',
+    date: '2026-11-11',
+    title: 'Через Sevensave',
+    changes: [
+      {
+        kind: 'new',
+        title: 'Лаунчер Sevensave',
+        text: 'Намёк теперь можно поставить и обновлять из лаунчера Sevensave: одна кнопка, без выбора файлов. Обычный установщик работает как раньше.',
+      },
+    ],
+  },
+  {
     version: '0.1.0',
     date: '2026-11-10',
     title: 'Первая партия',

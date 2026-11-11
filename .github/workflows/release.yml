@@ -64,12 +64,12 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
-      - name: Собрать установщик и portable
+      - name: Собрать установщик, portable и zip для лаунчера
         run: |
           rm -rf release
           npx electron-builder --win --x64 --publish never
       - name: Загрузить артефакты в релиз
-        run: gh release upload "$TAG" release/*.exe release/*.blockmap release/latest.yml --clobber
+        run: gh release upload "$TAG" release/*.exe release/*-win-x64.zip release/*.blockmap release/latest.yml --clobber
 
   mac:
     needs: draft

@@ -28,6 +28,8 @@ export function isPortable(): boolean {
  * Портативная версия так не умеет: для неё только проверяем, вышла ли новая, и даём ссылку.
  */
 export function initUpdater(send: (s: UpdateState) => void) {
+  // Из лаунчера Sevensave игру обновляет сам лаунчер: подменять её папку изнутри нельзя.
+  if (process.env.SEVENSAVE_LAUNCHER) return
   if (!app.isPackaged) return
   if (process.platform === 'darwin') {
     void macUpdate(send)

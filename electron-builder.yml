@@ -14,10 +14,15 @@ files:
 win:
   icon: build/icon.png
   executableName: Namek
+  # Имя для zip (nsis и portable задают свои ниже). Лаунчер ищет именно Namek-<версия>-win-x64.zip.
+  artifactName: Namek-${version}-win-${arch}.${ext}
   target:
     - target: nsis
       arch: [x64]
     - target: portable
+      arch: [x64]
+    # zip ставит лаунчер Sevensave: распаковывает в свою библиотеку и запускает без установщика.
+    - target: zip
       arch: [x64]
 nsis:
   oneClick: true
